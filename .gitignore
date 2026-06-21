@@ -1,0 +1,14 @@
+# Compiled binaries — build from source with .\build.ps1
+*.exe
+
+# AHK compiler (downloaded separately, not part of source)
+Ahk2Exe.exe
+Ahk2Exe.zip
+Ahk2Exe_extracted/
+
+# Windows noise
+Thumbs.db
+desktop.ini
+
+# Screenshots (reference only, not versioned)
+*.png
