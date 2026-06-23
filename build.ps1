@@ -29,8 +29,8 @@ Then drop Ahk2Exe.exe next to this build.ps1 and re-run.
     exit 1
 }
 
-$Script = Join-Path $PSScriptRoot "eu4_autoseige.ahk"
-$Out    = Join-Path $PSScriptRoot "eu4_autoseige.exe"
+$Script = Join-Path $PSScriptRoot "eu4_standard_pack.ahk"
+$Out    = Join-Path $PSScriptRoot "eu4_standard_pack.exe"
 
 $Bin = "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe"
 if (-not (Test-Path $Bin)) {

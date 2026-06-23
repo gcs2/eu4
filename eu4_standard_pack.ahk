@@ -2,7 +2,7 @@
 #SingleInstance Force
 
 ; ============================================================
-; EU4 Macro Suite
+; EU4 Standard Macro Pack
 ; ============================================================
 
 ; --- Time currency ---
@@ -94,8 +94,11 @@ global EDICT_BTN_X        := 500  ; * x of edict dropdown button column
 global EDICT_BTN_Y_FIRST  := 380  ; * y of first visible state row
 global EDICT_ROW_H        := 44   ; * row height (408-364 calibrated)
 global EDICT_OPT_X        := 1000 ; * x of dropdown option column
-global EDICT_Y_ENCOURAGE  := 610  ; * Encourage Development
-global EDICT_Y_NO_EDICT   := 960  ;   No Edict (after 1x WheelDown)
+global EDICT_Y_ENCOURAGE   := 610  ; * Encourage Development (4th)
+global EDICT_Y_AGE_ABILITY := 960  ; * Age ability edict (9th) — changes each age
+                                   ;   Age of Discovery  = Feudal Taxes Edict
+                                   ;   Age of Reformation = [next age ability]
+global EDICT_Y_NO_EDICT    := 960  ;   No Edict (after 1x WheelDown)
 
 CoordMode "Mouse", "Screen"
 SendMode "Event"
@@ -259,8 +262,9 @@ Hotkey "^m", (*) => ImproveRelations(DIPLO_Y_ALLIES)     ; Ctrl+M  Allies
 Hotkey "^n", (*) => ImproveRelations(DIPLO_Y_THREAT)     ; Ctrl+N  Threatening
 
 ; --- State Edicts (panel must be open, user scrolled to target states) ---
-Hotkey "^e", (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)             ; Ctrl+E  Encourage Dev
-Hotkey "^-", (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)        ; Ctrl+-  No Edict
+Hotkey "^e", (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)              ; Ctrl+E  Encourage Dev
+Hotkey "^-", (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)         ; Ctrl+-  No Edict
+Hotkey "^a", (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)            ; Ctrl+A  Age ability (9th slot)
 
 ; --- Kill ---
 Hotkey HK_KILL, (*) => ExitApp()
