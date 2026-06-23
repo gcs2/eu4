@@ -15,7 +15,7 @@ global WAIT := 50
 
 ; --- General config ---
 global UI_SCALE       := 1.3   ; EU4 Options -> UI Scale
-global SUBSTACK_COUNT := 8     ; F8 mass siege loop
+global SUBSTACK_COUNT := 8     ; F8 mass siege loop (tray-toggleable: 8 or 16)
 global DIPLOMAT_COUNT := 7     ; clicks per Improve Relations hotkey
 
 ; --- Hotkeys ---
@@ -56,9 +56,8 @@ SIEGE_BTN_Y := _btn.y
 ; ============================================================
 ; Diplomacy -> Improve Relations  (* = verified, 4K + UI 1.3)
 ; Navigation: b -> 0 -> a  (from clean screen)
-; X fixed; rows spaced 85px apart
 ; ============================================================
-global DIPLO_X           := 155  ; * x of all + buttons
+global DIPLO_X           := 155
 global DIPLO_Y_NEIGHBORS := 505  ; * Neighbouring Countries
 global DIPLO_Y_SUBJECTS  := 590  ; * Own Subject Countries (+85)
 global DIPLO_Y_OUTRAGED  := 675  ;   Outraged Countries    (+85)
@@ -68,43 +67,101 @@ global DIPLO_Y_THREAT    := 845  ;   Threatening Countries (+85)
 ; ============================================================
 ; State Edicts  (* = verified, 4K + UI 1.3)
 ; Navigation: b -> 9 -> s  (from clean screen)
-; User manually scrolls the state list before triggering.
-; Max 11 rows visible at once; set STATE_COUNT to however many are showing.
-;
-; Row geometry:
-;   EDICT_BTN_X          = x of the edict dropdown button (left column)
-;   EDICT_BTN_Y_FIRST    = y of first visible state's button
-;   EDICT_ROW_H          = row height in px (calibrated: 408-364 = 44)
-;
-; Dropdown option geometry (opens to the right, x=1000, 70px spacing):
-;   Advancement Effort    400
-;   Centralization Effort 470
-;   Defensive Edict       540
-;   Encourage Development 610  <- holy grail
-;   Feudal De Jure Law    680
-;   Increase Enlistment   750
-;   Protect Trade         820
-;   Enforce Religious     890
-;   Feudal Taxes Edict    960
-;   [scroll down 1]
-;   No Edict              960  (after WheelDown x1)
+; Panel must be open; user manually scrolls state list first.
+; Max 11 rows visible (STATE_COUNT). Rows: x=500, y=380, step=44px.
+; Dropdown options: x=1000, y starts 400, step=70px.
+;   1. Advancement Effort    400
+;   2. Centralization Effort 470
+;   3. Defensive Edict       540
+;   4. Encourage Development 610  <- holy grail
+;   5. Feudal De Jure Law    680
+;   6. Increase Enlistment   750
+;   7. Protect Trade         820
+;   8. Enforce Religious     890
+;   9. Age ability edict     960  <- slot 9, changes each age
+;      (Age of Discovery = Feudal Taxes Edict)
+;   [WheelDown x1] No Edict  960
 ; ============================================================
-global STATE_COUNT        := 11   ; visible rows - update if fewer showing
-global EDICT_BTN_X        := 500  ; * x of edict dropdown button column
-global EDICT_BTN_Y_FIRST  := 380  ; * y of first visible state row
-global EDICT_ROW_H        := 44   ; * row height (408-364 calibrated)
-global EDICT_OPT_X        := 1000 ; * x of dropdown option column
-global EDICT_Y_ENCOURAGE   := 610  ; * Encourage Development (4th)
-global EDICT_Y_AGE_ABILITY := 960  ; * Age ability edict (9th) — changes each age
-                                   ;   Age of Discovery  = Feudal Taxes Edict
-                                   ;   Age of Reformation = [next age ability]
-global EDICT_Y_NO_EDICT    := 960  ;   No Edict (after 1x WheelDown)
+global STATE_COUNT        := 11
+global EDICT_BTN_X        := 500
+global EDICT_BTN_Y_FIRST  := 380
+global EDICT_ROW_H        := 44
+global EDICT_OPT_X        := 1000
+global EDICT_Y_ENCOURAGE   := 610
+global EDICT_Y_AGE_ABILITY := 960  ; slot 9 — changes each age, coord stays the same
+global EDICT_Y_NO_EDICT    := 960  ; after 1x WheelDown
 
 CoordMode "Mouse", "Screen"
 SendMode "Event"
 
 ; ============================================================
-; F8 - Mass Auto-Siege
+; Tray menu — toggle key settings without recompiling
+; Right-click the taskbar icon (works in fullscreen EU4)
+; ============================================================
+
+; Label strings (must match exactly for Check/Uncheck calls)
+global TL_S8  := "Substacks:  8  (16k army / F8)"
+global TL_S16 := "Substacks: 16  (32k army / F8)"
+global TL_WF  := "Speed: Fast   — WAIT=25ms"
+global TL_WN  := "Speed: Normal — WAIT=50ms"
+global TL_WS  := "Speed: Slow   — WAIT=100ms"
+
+A_TrayMenu.Delete()
+A_TrayMenu.Add(TL_S8,  TraySetS8)
+A_TrayMenu.Add(TL_S16, TraySetS16)
+A_TrayMenu.Check(TL_S8)
+A_TrayMenu.Add()
+A_TrayMenu.Add(TL_WF, TraySetWF)
+A_TrayMenu.Add(TL_WN, TraySetWN)
+A_TrayMenu.Add(TL_WS, TraySetWS)
+A_TrayMenu.Check(TL_WN)
+A_TrayMenu.Add()
+A_TrayMenu.Add("Exit", (*) => ExitApp())
+
+; Brief tooltip overlay so you see the change without looking at the tray
+Notify(msg) {
+    ToolTip msg
+    SetTimer () => ToolTip(), -1500
+}
+
+TraySetS8(*) {
+    global SUBSTACK_COUNT, TL_S8, TL_S16
+    SUBSTACK_COUNT := 8
+    A_TrayMenu.Uncheck(TL_S16)
+    A_TrayMenu.Check(TL_S8)
+    Notify("Substacks: 8  (16k army)")
+}
+TraySetS16(*) {
+    global SUBSTACK_COUNT, TL_S8, TL_S16
+    SUBSTACK_COUNT := 16
+    A_TrayMenu.Uncheck(TL_S8)
+    A_TrayMenu.Check(TL_S16)
+    Notify("Substacks: 16  (32k army)")
+}
+TraySetWF(*) {
+    global WAIT, TL_WF, TL_WN, TL_WS
+    WAIT := 25
+    A_TrayMenu.Uncheck(TL_WN), A_TrayMenu.Uncheck(TL_WS)
+    A_TrayMenu.Check(TL_WF)
+    Notify("Speed: Fast  (WAIT=25ms)")
+}
+TraySetWN(*) {
+    global WAIT, TL_WF, TL_WN, TL_WS
+    WAIT := 50
+    A_TrayMenu.Uncheck(TL_WF), A_TrayMenu.Uncheck(TL_WS)
+    A_TrayMenu.Check(TL_WN)
+    Notify("Speed: Normal  (WAIT=50ms)")
+}
+TraySetWS(*) {
+    global WAIT, TL_WF, TL_WN, TL_WS
+    WAIT := 100
+    A_TrayMenu.Uncheck(TL_WF), A_TrayMenu.Uncheck(TL_WN)
+    A_TrayMenu.Check(TL_WS)
+    Notify("Speed: Slow  (WAIT=100ms)")
+}
+
+; ============================================================
+; F8 - Mass Auto-Siege  (SUBSTACK_COUNT set via tray)
 ; ============================================================
 MassAutoSiege() {
     global SIEGE_BTN_X, SIEGE_BTN_Y, WAIT, SUBSTACK_COUNT
@@ -143,6 +200,7 @@ SingleAutoSiege() {
 ; ============================================================
 ; F6 - Split 16k army into 8 x 2k substacks
 ; Pattern: s s s click  s s click  s click click  s
+; For 32k: run F6 on each 16k half separately (tray -> 16 substacks for F8)
 ; ============================================================
 SplitStack16() {
     global WAIT
@@ -171,7 +229,7 @@ SplitStack16() {
 }
 
 ; ============================================================
-; F5 - Split 16k -> 8 x 2k, then auto-siege all 8
+; F5 - Split 16k -> 8 x 2k, then auto-siege all SUBSTACK_COUNT
 ; ============================================================
 SplitThenSiege() {
     SplitStack16()
@@ -181,8 +239,6 @@ SplitThenSiege() {
 
 ; ============================================================
 ; Diplomacy - Improve Relations
-; Opens panel via b -> 0 -> a, clicks target row DIPLOMAT_COUNT times.
-; Requires clean screen.
 ; ============================================================
 ImproveRelations(y_coord) {
     global WAIT, DIPLO_X, DIPLOMAT_COUNT
@@ -202,9 +258,6 @@ ImproveRelations(y_coord) {
 
 ; ============================================================
 ; State Edicts - set edict for all STATE_COUNT visible rows
-; Call with needs_scroll=true for No Edict (1x WheelDown per dropdown)
-; Panel must already be open on State Edicts sub-tab.
-; User manually scrolls the state list to the desired window first.
 ; ============================================================
 SetAllEdicts(edict_y, needs_scroll := false) {
     global WAIT, STATE_COUNT, EDICT_BTN_X, EDICT_BTN_Y_FIRST, EDICT_ROW_H, EDICT_OPT_X
@@ -214,10 +267,9 @@ SetAllEdicts(edict_y, needs_scroll := false) {
         MouseMove EDICT_BTN_X, btn_y, 0
         Sleep WAIT
         Click
-        Sleep WAIT * 2   ; wait for dropdown to open
+        Sleep WAIT * 2
 
         if needs_scroll {
-            ; Move to center of dropdown before scrolling
             MouseMove EDICT_OPT_X, 680, 0
             Sleep WAIT
             Send "{WheelDown}"
@@ -233,22 +285,11 @@ SetAllEdicts(edict_y, needs_scroll := false) {
     }
 }
 
-; Open States -> State Edicts panel from clean screen
-OpenStateEdicts() {
-    global WAIT
-    Send "b"
-    Sleep WAIT * 4
-    Send "9"
-    Sleep WAIT * 4
-    Send "s"
-    Sleep WAIT * 4
-}
-
 ; ============================================================
 ; Hotkey bindings
 ; ============================================================
 
-; --- Siege / Split ---
+; --- Military ---
 Hotkey HK_MASS_SIEGE,   (*) => MassAutoSiege()
 Hotkey HK_SINGLE_SIEGE, (*) => SingleAutoSiege()
 Hotkey HK_SPLIT_16,     (*) => SplitStack16()
@@ -261,10 +302,10 @@ Hotkey "^,", (*) => ImproveRelations(DIPLO_Y_OUTRAGED)   ; Ctrl+,  Outraged
 Hotkey "^m", (*) => ImproveRelations(DIPLO_Y_ALLIES)     ; Ctrl+M  Allies
 Hotkey "^n", (*) => ImproveRelations(DIPLO_Y_THREAT)     ; Ctrl+N  Threatening
 
-; --- State Edicts (panel must be open, user scrolled to target states) ---
-Hotkey "^e", (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)              ; Ctrl+E  Encourage Dev
-Hotkey "^-", (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)         ; Ctrl+-  No Edict
-Hotkey "^a", (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)            ; Ctrl+A  Age ability (9th slot)
+; --- State Edicts (panel open, state list scrolled to target rows) ---
+Hotkey "^e", (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)           ; Ctrl+E  Encourage Dev
+Hotkey "^-", (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)      ; Ctrl+-  No Edict
+Hotkey "^a", (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)         ; Ctrl+A  Age ability
 
 ; --- Kill ---
 Hotkey HK_KILL, (*) => ExitApp()

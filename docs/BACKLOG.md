@@ -4,19 +4,19 @@
 
 ## Planned
 
-### State Edicts automation
-From the States panel (b → [States tab] → State Edicts sub-tab), set edicts across all states in one pass.  
-Screenshot reference: `production to States to State Edicts.png`  
-**Blocked on:** navigation key sequence to reach State Edicts, and whether edicts are set via a dropdown click or a fixed coord per row.
+### SplitStack32 (32k → 16 × 2k, one hotkey)
+Current workaround: press F6 twice (once per 16k half).  
+To automate: after running the 16k pattern on Army A (8 substacks now in province), need to navigate to the intact 16k Army B and repeat. The exact click count to reach B from the final cursor position is **unknown** — depends on how EU4 cycles a 9-item province stack (8 × 2k + 1 × 16k).  
+**Blocked on:** in-game testing to count how many clicks return to the 16k.  
+Once click count is known, SplitStack32 = `s` → SplitStack16() → `click × N` → SplitStack16() on B, then tray → 16 substacks → F8.
 
 ---
 
 ## Ideas
 
-- **Variable substack count** — prompt or read from UI overlay so F8 works for non-8 splits.
 - **Sound/visual feedback** — beep or tray flash when a loop completes.
 - **Stack-size guard** — detect when fewer than SUBSTACK_COUNT units are present and stop early.
-- **Rename eu4_autoseige.ahk** — file scope has grown beyond siege; consider `eu4_macros.ahk`.
+- **STATE_COUNT tray toggle** — add to tray menu alongside SUBSTACK_COUNT (e.g. 5 / 8 / 11 rows).
 
 ---
 
@@ -35,3 +35,8 @@ Screenshot reference: `production to States to State Edicts.png`
 - `SiegeButtonCoords()` auto-scales from baseline; `UI_SCALE` is single-line user config.
 - `build.ps1` compiles to standalone `.exe` via `Ahk2Exe` + AHK v2 runtime.
 - Kill hotkey changed from `Esc` → `Ctrl+Shift+F12` (Esc was silently killing script mid-EU4-session).
+- **Ctrl+E** — Set all visible states → Encourage Development.
+- **Ctrl+A** — Set all visible states → Age ability edict (9th slot).
+- **Ctrl+-** — Set all visible states → No Edict.
+- Renamed file to `eu4_standard_pack.ahk`; added `docs/KEYBINDINGS.md` visualization.
+- **Tray menu** — right-click taskbar icon to toggle `SUBSTACK_COUNT` (8/16) and `WAIT` speed (fast/normal/slow) without recompiling. Brief tooltip overlay confirms each change.

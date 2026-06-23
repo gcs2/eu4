@@ -61,7 +61,7 @@ Modifier pattern = category. Learn the zone, then fill in the keys.
 | F5  | Split 16k → 8×2k **then** mass auto-siege all 8 |
 | F6  | Split 16k → 8×2k only |
 | F7  | Single-shot auto-siege (one unit per press, any stack size) |
-| F8  | Mass auto-siege all `SUBSTACK_COUNT` units |
+| F8  | Mass auto-siege all `SUBSTACK_COUNT` units (tray: 8 for 16k / 16 for 32k) |
 
 ### State Edicts (Ctrl + letter, panel open first)
 
@@ -84,6 +84,15 @@ Modifier pattern = category. Learn the zone, then fill in the keys.
 | Ctrl+N | Improve Relations → Threatening Countries |
 
 > Opens panel automatically: `b → 0 → a`. Clicks 7 times (all diplomats).
+
+### Tray menu (right-click taskbar icon)
+
+| Setting | Options |
+|---------|---------|
+| Substacks | **8** (16k army) / 16 (32k army) — changes F8 loop count |
+| Speed | Fast (WAIT=25ms) / **Normal (50ms)** / Slow (100ms) — scales all timings |
+
+Brief tooltip overlay confirms each change. Works in fullscreen EU4.
 
 ### Utility
 
