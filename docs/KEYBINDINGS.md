@@ -36,9 +36,10 @@ Modifier pattern = category. Learn the zone, then fill in the keys.
 
  ┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
  │ Caps │  A   │  S   │  D   │  F   │  G   │  H   │  J   │  K   │  L   │  ;   │  '   │
- │      │ C+A  │      │      │      │      │      │      │      │      │ C+;  │ C+'  │
+ │      │      │      │      │      │      │      │      │ C+K  │      │ C+;  │      │
  └──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┘
-          Age Abil.                                                       Divrt1 DivertAll
+                                                              AgeAbl.     Divrt1
+                                                                          (+Sh=All)
 
  ┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
  │ Shift│  Z   │  X   │  C   │  V   │  B   │  N   │  M   │  ,   │  .   │  /   │
@@ -68,8 +69,10 @@ Modifier pattern = category. Learn the zone, then fill in the keys.
 | Key | Action |
 |-----|--------|
 | Ctrl+E | Set all visible states → Encourage Development |
-| Ctrl+A | Set all visible states → Age ability edict (9th slot, changes per age) |
+| Ctrl+K | Set all visible states → Age ability edict (slot changes per age) |
 | Ctrl+- | Set all visible states → No Edict |
+
+> Ctrl+A deliberately avoided — conflicts with select-all in every text field.
 
 > Open panel first: `b → 9 → s`. Manually scroll state list to the rows you want. Max 11 rows visible.
 
@@ -77,10 +80,10 @@ Modifier pattern = category. Learn the zone, then fill in the keys.
 
 | Key | Action |
 |-----|--------|
-| Ctrl+; | Enable Divert Trade → subject under cursor (right-hand, single shot) |
-| Ctrl+' | Enable Divert Trade → all visible subject rows (`SUBJECT_COUNT`) |
+| Ctrl+; | Enable Divert Trade → subject under cursor (single shot, right-hand) |
+| Ctrl+Shift+; | Enable Divert Trade → all visible subject rows (`SUBJECT_COUNT`) |
 
-> Open the Subjects panel, scroll to the subjects you want. Ctrl+; is the primary key — hover any subject's Interactions icon and fire; cursor returns so you can chain. Ctrl+' runs the full loop top-down.
+> Ctrl+; is the primary key — hover any subject's Interactions icon and fire; cursor returns so you can chain down the list. Ctrl+Shift+; runs the full loop top-down automatically.
 
 ### Diplomacy — Improve Relations (Ctrl + symbol, clean screen)
 

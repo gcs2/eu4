@@ -60,7 +60,7 @@ Open the State Edicts panel first (`b → 9 → s`), manually scroll to the stat
 | Key | Edict |
 |-----|-------|
 | **Ctrl+E** | Encourage Development |
-| **Ctrl+A** | Age ability edict (slot 9 — changes each age) |
+| **Ctrl+K** | Age ability edict (slot changes each age) |
 | **Ctrl+-** | No Edict |
 
 ### Subjects — Ctrl + D
@@ -69,8 +69,8 @@ Open the Subjects panel first, scroll to the subjects you want. Forces trade to 
 
 | Key | Action |
 |-----|--------|
-| **Ctrl+;** | Enable Divert Trade — subject under cursor (right-hand; chainable) |
-| **Ctrl+'** | Enable Divert Trade — all visible subjects (`SUBJECT_COUNT` rows) |
+| **Ctrl+;** | Enable Divert Trade — subject under cursor (right-hand, chainable) |
+| **Ctrl+Shift+;** | Enable Divert Trade — all visible subjects (`SUBJECT_COUNT` rows) |
 
 ### Utility
 

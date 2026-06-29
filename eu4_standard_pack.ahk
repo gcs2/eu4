@@ -89,8 +89,9 @@ global EDICT_ROW_H        := 47   ; * calibrated: (875-363)/11 = 46.5
 global EDICT_OPT_X        := 991   ; * verified (Reformation)
 global EDICT_Y_ENCOURAGE   := 610   ; * Encourage Development
 global EDICT_Y_AGE_ABILITY := 924   ; * slot shifts each age — no scroll needed
-                                    ;   Age of Discovery  = y=960 (Feudal Taxes Edict)
+                                    ;   Age of Discovery   = y=960 (Feudal Taxes Edict)
                                     ;   Age of Reformation = y=924 (verified)
+                                    ;   Hotkey: Ctrl+K (NOT Ctrl+A — conflicts with select-all)
 global EDICT_Y_NO_EDICT    := 924   ; * after 1x WheelDown (verified Reformation)
 
 ; ============================================================
@@ -361,14 +362,14 @@ Hotkey "^m", (*) => ImproveRelations(DIPLO_Y_ALLIES)     ; Ctrl+M  Allies
 Hotkey "^n", (*) => ImproveRelations(DIPLO_Y_THREAT)     ; Ctrl+N  Threatening
 
 ; --- State Edicts (panel open, state list scrolled to target rows) ---
-Hotkey "^e", (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)           ; Ctrl+E  Encourage Dev
-Hotkey "^-", (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)      ; Ctrl+-  No Edict
-Hotkey "^a", (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)         ; Ctrl+A  Age ability
+Hotkey "^e",  (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)          ; Ctrl+E        Encourage Dev
+Hotkey "^-",  (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)     ; Ctrl+-        No Edict
+Hotkey "^k",  (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)        ; Ctrl+K        Age ability (was Ctrl+A — conflicts with select-all)
 
 ; --- Subjects (Subjects panel open, list scrolled to target rows) ---
-; Right-hand cluster: ; and ' are right of L, comfortable with lefty mouse
-Hotkey "^;",  (*) => EnableDivertTradeOne()                   ; Ctrl+;  Divert Trade - subject under cursor
-Hotkey "^'",  (*) => EnableDivertTradeAll()                   ; Ctrl+'  Divert Trade - all visible rows
+; Right-hand cluster: ; is right of L, single shot is bare modifier
+Hotkey "^;",  (*) => EnableDivertTradeOne()                   ; Ctrl+;        Divert Trade - subject under cursor
+Hotkey "^+;", (*) => EnableDivertTradeAll()                   ; Ctrl+Shift+;  Divert Trade - all visible rows
 
 ; --- Kill ---
 Hotkey HK_KILL, (*) => ExitApp()
