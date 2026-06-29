@@ -69,27 +69,29 @@ global DIPLO_Y_THREAT    := 845  ;   Threatening Countries (+85)
 ; Navigation: b -> 9 -> s  (from clean screen)
 ; Panel must be open; user manually scrolls state list first.
 ; Max 11 rows visible (STATE_COUNT). Rows: x=500, y=380, step=44px.
-; Dropdown options: x=1000, y starts 400, step=70px.
+; Dropdown options: x=991 (*verified Reformation), ~70px spacing.
 ;   1. Advancement Effort    400
 ;   2. Centralization Effort 470
 ;   3. Defensive Edict       540
-;   4. Encourage Development 610  <- holy grail
+;   4. Encourage Development 610  * verified
 ;   5. Feudal De Jure Law    680
 ;   6. Increase Enlistment   750
 ;   7. Protect Trade         820
-;   8. Enforce Religious     890
-;   9. Age ability edict     960  <- slot 9, changes each age
-;      (Age of Discovery = Feudal Taxes Edict)
-;   [WheelDown x1] No Edict  960
+;   8. Age ability edict     924  * verified (Age of Reformation)
+;      Age of Discovery was slot 9 / y=960 (Feudal Taxes Edict)
+;   9. Feudal Taxes Edict    960  (was age ability, now one slot lower)
+;   [WheelDown x1] No Edict  924  * verified (Reformation)
 ; ============================================================
 global STATE_COUNT        := 11
 global EDICT_BTN_X        := 500
 global EDICT_BTN_Y_FIRST  := 380
 global EDICT_ROW_H        := 44
-global EDICT_OPT_X        := 1000
-global EDICT_Y_ENCOURAGE   := 610
-global EDICT_Y_AGE_ABILITY := 960  ; slot 9 — changes each age, coord stays the same
-global EDICT_Y_NO_EDICT    := 960  ; after 1x WheelDown
+global EDICT_OPT_X        := 991   ; * verified (Reformation)
+global EDICT_Y_ENCOURAGE   := 610   ; * Encourage Development
+global EDICT_Y_AGE_ABILITY := 924   ; * slot shifts each age — no scroll needed
+                                    ;   Age of Discovery  = y=960 (Feudal Taxes Edict)
+                                    ;   Age of Reformation = y=924 (verified)
+global EDICT_Y_NO_EDICT    := 924   ; * after 1x WheelDown (verified Reformation)
 
 CoordMode "Mouse", "Screen"
 SendMode "Event"

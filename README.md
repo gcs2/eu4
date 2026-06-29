@@ -137,9 +137,11 @@ docs/
 
 The age ability edict (Ctrl+A) is always **slot 9** in the dropdown — the coordinate stays fixed, the edict itself changes each age:
 
-| Age | Edict |
-|-----|-------|
-| Age of Discovery | Feudal Taxes Edict |
-| Age of Reformation | *(update comment in script when confirmed)* |
-| Age of Absolutism | *(update comment in script when confirmed)* |
-| Age of Revolutions | *(update comment in script when confirmed)* |
+| Age | Edict | y coord |
+|-----|-------|---------|
+| Age of Discovery | Feudal Taxes Edict | 960 |
+| Age of Reformation | *(name TBD)* | 924 ✓ |
+| Age of Absolutism | *(update when reached)* | — |
+| Age of Revolutions | *(update when reached)* | — |
+
+> The slot shifts each age. When you enter a new age, use WindowSpy to find the new y and update `EDICT_Y_AGE_ABILITY` in the script.
