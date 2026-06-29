@@ -82,10 +82,10 @@ global DIPLO_Y_THREAT    := 845  ;   Threatening Countries (+85)
 ;   9. Feudal Taxes Edict    960  (was age ability, now one slot lower)
 ;   [WheelDown x1] No Edict  924  * verified (Reformation)
 ; ============================================================
-global STATE_COUNT        := 11
-global EDICT_BTN_X        := 500
-global EDICT_BTN_Y_FIRST  := 380
-global EDICT_ROW_H        := 44
+global STATE_COUNT        := 11   ; fully visible rows
+global EDICT_BTN_X        := 501  ; * x of edict dropdown button column
+global EDICT_BTN_Y_FIRST  := 386  ; * first-row center (top 363 + 23)
+global EDICT_ROW_H        := 47   ; * calibrated: (875-363)/11 = 46.5
 global EDICT_OPT_X        := 991   ; * verified (Reformation)
 global EDICT_Y_ENCOURAGE   := 610   ; * Encourage Development
 global EDICT_Y_AGE_ABILITY := 924   ; * slot shifts each age — no scroll needed
@@ -366,8 +366,9 @@ Hotkey "^-", (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)      ; Ctrl+-  No Edict
 Hotkey "^a", (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)         ; Ctrl+A  Age ability
 
 ; --- Subjects (Subjects panel open, list scrolled to target rows) ---
-Hotkey "^d",  (*) => EnableDivertTradeAll()                   ; Ctrl+D        Divert Trade - all visible
-Hotkey "^+d", (*) => EnableDivertTradeOne()                   ; Ctrl+Shift+D  Divert Trade - subject under cursor
+; Right-hand cluster: ; and ' are right of L, comfortable with lefty mouse
+Hotkey "^;",  (*) => EnableDivertTradeOne()                   ; Ctrl+;  Divert Trade - subject under cursor
+Hotkey "^'",  (*) => EnableDivertTradeAll()                   ; Ctrl+'  Divert Trade - all visible rows
 
 ; --- Kill ---
 Hotkey HK_KILL, (*) => ExitApp()

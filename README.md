@@ -69,8 +69,8 @@ Open the Subjects panel first, scroll to the subjects you want. Forces trade to 
 
 | Key | Action |
 |-----|--------|
-| **Ctrl+D** | Enable Divert Trade for all visible subjects (`SUBJECT_COUNT` rows) |
-| **Ctrl+Shift+D** | Enable Divert Trade for just the subject under the cursor (chainable) |
+| **Ctrl+;** | Enable Divert Trade — subject under cursor (right-hand; chainable) |
+| **Ctrl+'** | Enable Divert Trade — all visible subjects (`SUBJECT_COUNT` rows) |
 
 ### Utility
 
