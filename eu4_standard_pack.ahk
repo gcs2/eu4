@@ -93,6 +93,23 @@ global EDICT_Y_AGE_ABILITY := 924   ; * slot shifts each age — no scroll neede
                                     ;   Age of Reformation = y=924 (verified)
 global EDICT_Y_NO_EDICT    := 924   ; * after 1x WheelDown (verified Reformation)
 
+; ============================================================
+; Subjects -> Enable Divert Trade  (* = verified, 4K + UI 1.3)
+; Subjects panel must be open; user scrolls to the subjects to process.
+; Per row: click the Interactions column (selects subject, opens the
+; interaction submenu at a FIXED screen spot), then click Enable Divert Trade.
+;   SUBJECT_BTN_X    = x of Interactions column (opens submenu)
+;   SUBJECT_Y_FIRST  = y of first subject row (scroll list to top first)
+;   SUBJECT_ROW_H    = row height (~50 measured from image — VERIFY in-game)
+;   DIVERT_BTN_X/Y   = "Enable Divert Trade" button in the submenu
+; ============================================================
+global SUBJECT_COUNT     := 19   ; visible subject rows — update to match
+global SUBJECT_BTN_X     := 610  ; * Interactions column
+global SUBJECT_Y_FIRST   := 415  ; * first-row center (top edge 396 + rowH/2)
+global SUBJECT_ROW_H     := 39   ; * calibrated: (1135-396)/19 = 38.9
+global DIVERT_BTN_X      := 890  ; * Enable Divert Trade button
+global DIVERT_BTN_Y      := 665  ; *
+
 CoordMode "Mouse", "Screen"
 SendMode "Event"
 
@@ -288,6 +305,45 @@ SetAllEdicts(edict_y, needs_scroll := false) {
 }
 
 ; ============================================================
+; Subjects - Enable Divert Trade
+; Panel must be open. Per row: click Interactions column (opens submenu
+; at a fixed spot), then click Enable Divert Trade at 890,665.
+;
+;   EnableDivertTradeAll()  - Ctrl+D: loop all SUBJECT_COUNT visible rows
+;   EnableDivertTradeOne()  - Ctrl+Shift+D: just the subject under the cursor
+; ============================================================
+EnableDivertTradeAll() {
+    global WAIT, SUBJECT_COUNT, SUBJECT_BTN_X, SUBJECT_Y_FIRST, SUBJECT_ROW_H, DIVERT_BTN_X, DIVERT_BTN_Y
+
+    Loop SUBJECT_COUNT {
+        row_y := SUBJECT_Y_FIRST + (A_Index - 1) * SUBJECT_ROW_H
+        MouseMove SUBJECT_BTN_X, row_y, 0
+        Sleep WAIT
+        Click
+        Sleep WAIT * 2   ; wait for interaction submenu to open
+        MouseMove DIVERT_BTN_X, DIVERT_BTN_Y, 0
+        Sleep WAIT
+        Click
+        Sleep WAIT * 2
+    }
+}
+
+; Hover any subject's Interactions icon, fire — enables Divert Trade for
+; just that one, then returns the cursor so you can chain shots.
+EnableDivertTradeOne() {
+    global WAIT, DIVERT_BTN_X, DIVERT_BTN_Y
+    MouseGetPos &mx, &my
+    Click
+    Sleep WAIT * 2   ; wait for interaction submenu to open
+    MouseMove DIVERT_BTN_X, DIVERT_BTN_Y, 0
+    Sleep WAIT
+    Click
+    Sleep WAIT * 2
+    MouseMove mx, my, 0
+    Sleep WAIT
+}
+
+; ============================================================
 ; Hotkey bindings
 ; ============================================================
 
@@ -308,6 +364,10 @@ Hotkey "^n", (*) => ImproveRelations(DIPLO_Y_THREAT)     ; Ctrl+N  Threatening
 Hotkey "^e", (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)           ; Ctrl+E  Encourage Dev
 Hotkey "^-", (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)      ; Ctrl+-  No Edict
 Hotkey "^a", (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)         ; Ctrl+A  Age ability
+
+; --- Subjects (Subjects panel open, list scrolled to target rows) ---
+Hotkey "^d",  (*) => EnableDivertTradeAll()                   ; Ctrl+D        Divert Trade - all visible
+Hotkey "^+d", (*) => EnableDivertTradeOne()                   ; Ctrl+Shift+D  Divert Trade - subject under cursor
 
 ; --- Kill ---
 Hotkey HK_KILL, (*) => ExitApp()

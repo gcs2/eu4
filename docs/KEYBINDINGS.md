@@ -36,9 +36,10 @@ Modifier pattern = category. Learn the zone, then fill in the keys.
 
  ┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
  │ Caps │  A   │  S   │  D   │  F   │  G   │  H   │  J   │  K   │  L   │  ;   │  '   │
- │      │ C+A  │      │      │      │      │      │      │      │      │      │      │
+ │      │ C+A  │      │ C+D  │      │      │      │      │      │      │      │      │
  └──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┘
-          Age Abil.
+          Age Abil.   Divert
+                      (+Shift = one)
 
  ┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
  │ Shift│  Z   │  X   │  C   │  V   │  B   │  N   │  M   │  ,   │  .   │  /   │
@@ -72,6 +73,15 @@ Modifier pattern = category. Learn the zone, then fill in the keys.
 | Ctrl+- | Set all visible states → No Edict |
 
 > Open panel first: `b → 9 → s`. Manually scroll state list to the rows you want. Max 11 rows visible.
+
+### Subjects (Subjects panel open first)
+
+| Key | Action |
+|-----|--------|
+| Ctrl+D | Enable Divert Trade → all visible subject rows (`SUBJECT_COUNT`) |
+| Ctrl+Shift+D | Enable Divert Trade → just the subject under the cursor |
+
+> Open the Subjects panel, scroll to the subjects you want. Ctrl+D loops top-down; Ctrl+Shift+D hits whichever subject's Interactions icon you're hovering (chainable).
 
 ### Diplomacy — Improve Relations (Ctrl + symbol, clean screen)
 
@@ -107,6 +117,6 @@ Brief tooltip overlay confirms each change. Works in fullscreen EU4.
 | Zone | Available keys |
 |------|---------------|
 | Military (F-row) | F9, F10, F11 |
-| State/Admin (Ctrl+letter) | C+R, C+T, C+D, C+F, C+G, C+H, C+J, C+K, C+L |
+| State/Admin (Ctrl+letter) | C+R, C+T, C+F, C+G, C+H, C+J, C+K, C+L |
 | Diplomacy (Ctrl+symbol) | C+; C+' C+[ C+] |
 | Ctrl+Shift (utility) | C++E, C++A, C++R … |

@@ -63,6 +63,15 @@ Open the State Edicts panel first (`b → 9 → s`), manually scroll to the stat
 | **Ctrl+A** | Age ability edict (slot 9 — changes each age) |
 | **Ctrl+-** | No Edict |
 
+### Subjects — Ctrl + D
+
+Open the Subjects panel first, scroll to the subjects you want. Forces trade to flow your way across a big subject network (e.g. after Revoke the Privilegia).
+
+| Key | Action |
+|-----|--------|
+| **Ctrl+D** | Enable Divert Trade for all visible subjects (`SUBJECT_COUNT` rows) |
+| **Ctrl+Shift+D** | Enable Divert Trade for just the subject under the cursor (chainable) |
+
 ### Utility
 
 | Key | Action |
