@@ -27,8 +27,8 @@
 - [x] F6 — split 16k → 8×2k
 - [x] F5 — split 16k then siege all 8
 - [x] Ctrl+/ . , M N — Improve Relations (5 target rows, 7 diplomat clicks each)
-- [x] Ctrl+E / Ctrl+A / Ctrl+- — state edicts (Encourage Dev / Age ability / No Edict)
-- [x] Ctrl+D / Ctrl+Shift+D — Enable Divert Trade across subjects (all visible / one under cursor)
+- [x] Ctrl+E / Ctrl+K / Ctrl+- — state edicts (Encourage Dev / Age ability / No Edict)
+- [x] Ctrl+; / Ctrl+Shift+; — Enable Divert Trade (single shot right-hand / all visible subjects)
 - [x] Tray menu — toggle substacks (8/16) and speed (fast/normal/slow) at runtime
 - [x] Time currency — all sleeps as multiples of WAIT, tune once
 - [x] build.ps1 — one-command compile to standalone EXE

@@ -111,6 +111,10 @@ Tune `WAIT` once — every timing in the script scales proportionally.
 - **NEVER use bare `Esc` as the kill switch in EU4.** Esc fires constantly in-game (closing panels, cancelling actions, backing out of menus). It will silently kill the script mid-session.
 - Current kill hotkey: `^+F12` (Ctrl+Shift+F12) — safe, never used by EU4.
 - All global config vars must be declared with `global` at the top level in AHK v2, not just inside functions. Otherwise function-scope `global` declarations can silently shadow them.
+- **NEVER bind these system shortcuts** — they fire constantly in chat, browsers, and text fields, making the hotkey unusable outside the game window:
+  - `^a` (select-all), `^c` (copy), `^v` (paste), `^x` (cut), `^z` (undo), `^y` (redo)
+  - `^s` (save), `^w` (close tab), `^t` (new tab), `^r` (refresh), `^f` (find)
+  - Prefer right-hand keys (`; ' [ ] k l j`) which are unused by system and comfortable with a lefty mouse.
 
 ## 9. EU4 Stack Split Mechanic
 
