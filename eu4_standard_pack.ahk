@@ -115,9 +115,12 @@ CoordMode "Mouse", "Screen"
 SendMode "Event"
 
 ; ============================================================
-; Tray menu — toggle key settings without recompiling
+; Tray menu — toggle settings and calibrate coordinates
 ; Right-click the taskbar icon (works in fullscreen EU4)
 ; ============================================================
+
+; Edict dropdown slots are exactly 70px apart — jump by slot, not by pixel
+global EDICT_STEP := 70
 
 ; Label strings (must match exactly for Check/Uncheck calls)
 global TL_S8  := "Substacks:  8  (16k army / F8)"
@@ -126,15 +129,37 @@ global TL_WF  := "Speed: Fast   — WAIT=25ms"
 global TL_WN  := "Speed: Normal — WAIT=50ms"
 global TL_WS  := "Speed: Slow   — WAIT=100ms"
 
+; Calibration submenus — rebuilt on every nudge so the Y label stays live
+global encCalMenu     := Menu()
+global ageCalMenu     := Menu()
+global noEdictCalMenu := Menu()
+global divertCalMenu  := Menu()
+global calMenu        := Menu()
+
+BuildEncCalMenu()
+BuildAgeCalMenu()
+BuildNoEdictCalMenu()
+BuildDivertCalMenu()
+calMenu.Add("Encourage Dev",   encCalMenu)
+calMenu.Add("Age Ability",     ageCalMenu)
+calMenu.Add("No Edict",        noEdictCalMenu)
+calMenu.Add("Divert Trade Y",  divertCalMenu)
+
 A_TrayMenu.Delete()
+A_TrayMenu.Add("─── Substacks ───", (*) => 0)
+A_TrayMenu.Disable("─── Substacks ───")
 A_TrayMenu.Add(TL_S8,  TraySetS8)
 A_TrayMenu.Add(TL_S16, TraySetS16)
 A_TrayMenu.Check(TL_S8)
 A_TrayMenu.Add()
+A_TrayMenu.Add("─── Speed ───", (*) => 0)
+A_TrayMenu.Disable("─── Speed ───")
 A_TrayMenu.Add(TL_WF, TraySetWF)
 A_TrayMenu.Add(TL_WN, TraySetWN)
 A_TrayMenu.Add(TL_WS, TraySetWS)
 A_TrayMenu.Check(TL_WN)
+A_TrayMenu.Add()
+A_TrayMenu.Add("Calibrate coords", calMenu)
 A_TrayMenu.Add()
 A_TrayMenu.Add("Exit", (*) => ExitApp())
 
@@ -143,6 +168,8 @@ Notify(msg) {
     ToolTip msg
     SetTimer () => ToolTip(), -1500
 }
+
+; ── Settings handlers ──────────────────────────────────────
 
 TraySetS8(*) {
     global SUBSTACK_COUNT, TL_S8, TL_S16
@@ -178,6 +205,126 @@ TraySetWS(*) {
     A_TrayMenu.Uncheck(TL_WF), A_TrayMenu.Uncheck(TL_WN)
     A_TrayMenu.Check(TL_WS)
     Notify("Speed: Slow  (WAIT=100ms)")
+}
+
+; ── Calibration: quantized slot jumps + fine ±1px + type exact ──
+; Edict slots are 70px apart. ▼ = lower on screen (+Y), ▲ = higher (-Y).
+
+BuildEncCalMenu() {
+    global encCalMenu, EDICT_Y_ENCOURAGE, EDICT_STEP
+    encCalMenu.Delete()
+    encCalMenu.Add("Y = " EDICT_Y_ENCOURAGE, (*) => 0)
+    encCalMenu.Disable("Y = " EDICT_Y_ENCOURAGE)
+    encCalMenu.Add()
+    encCalMenu.Add("▼  +1 slot  (+" EDICT_STEP "px)", (*) => NudgeEnc(EDICT_STEP))
+    encCalMenu.Add("▲  -1 slot  (-" EDICT_STEP "px)", (*) => NudgeEnc(-EDICT_STEP))
+    encCalMenu.Add()
+    encCalMenu.Add("▼  fine  +1px", (*) => NudgeEnc(1))
+    encCalMenu.Add("▲  fine  -1px", (*) => NudgeEnc(-1))
+    encCalMenu.Add()
+    encCalMenu.Add("Type Y…", TypeEncY)
+}
+NudgeEnc(delta) {
+    global EDICT_Y_ENCOURAGE
+    EDICT_Y_ENCOURAGE += delta
+    BuildEncCalMenu()
+    Notify("Encourage Dev  Y → " EDICT_Y_ENCOURAGE)
+}
+TypeEncY(*) {
+    global EDICT_Y_ENCOURAGE
+    r := InputBox("Enter Y coordinate:", "Encourage Dev", "w220 h100", EDICT_Y_ENCOURAGE)
+    if r.Result = "OK" && IsInteger(r.Value) {
+        EDICT_Y_ENCOURAGE := Integer(r.Value)
+        BuildEncCalMenu()
+        Notify("Encourage Dev  Y → " EDICT_Y_ENCOURAGE)
+    }
+}
+
+BuildAgeCalMenu() {
+    global ageCalMenu, EDICT_Y_AGE_ABILITY, EDICT_STEP
+    ageCalMenu.Delete()
+    ageCalMenu.Add("Y = " EDICT_Y_AGE_ABILITY, (*) => 0)
+    ageCalMenu.Disable("Y = " EDICT_Y_AGE_ABILITY)
+    ageCalMenu.Add()
+    ageCalMenu.Add("▼  +1 slot  (+" EDICT_STEP "px)", (*) => NudgeAge(EDICT_STEP))
+    ageCalMenu.Add("▲  -1 slot  (-" EDICT_STEP "px)", (*) => NudgeAge(-EDICT_STEP))
+    ageCalMenu.Add()
+    ageCalMenu.Add("▼  fine  +1px", (*) => NudgeAge(1))
+    ageCalMenu.Add("▲  fine  -1px", (*) => NudgeAge(-1))
+    ageCalMenu.Add()
+    ageCalMenu.Add("Type Y…", TypeAgeY)
+}
+NudgeAge(delta) {
+    global EDICT_Y_AGE_ABILITY
+    EDICT_Y_AGE_ABILITY += delta
+    BuildAgeCalMenu()
+    Notify("Age Ability  Y → " EDICT_Y_AGE_ABILITY)
+}
+TypeAgeY(*) {
+    global EDICT_Y_AGE_ABILITY
+    r := InputBox("Enter Y coordinate:", "Age Ability", "w220 h100", EDICT_Y_AGE_ABILITY)
+    if r.Result = "OK" && IsInteger(r.Value) {
+        EDICT_Y_AGE_ABILITY := Integer(r.Value)
+        BuildAgeCalMenu()
+        Notify("Age Ability  Y → " EDICT_Y_AGE_ABILITY)
+    }
+}
+
+BuildNoEdictCalMenu() {
+    global noEdictCalMenu, EDICT_Y_NO_EDICT, EDICT_STEP
+    noEdictCalMenu.Delete()
+    noEdictCalMenu.Add("Y = " EDICT_Y_NO_EDICT, (*) => 0)
+    noEdictCalMenu.Disable("Y = " EDICT_Y_NO_EDICT)
+    noEdictCalMenu.Add()
+    noEdictCalMenu.Add("▼  +1 slot  (+" EDICT_STEP "px)", (*) => NudgeNoEdict(EDICT_STEP))
+    noEdictCalMenu.Add("▲  -1 slot  (-" EDICT_STEP "px)", (*) => NudgeNoEdict(-EDICT_STEP))
+    noEdictCalMenu.Add()
+    noEdictCalMenu.Add("▼  fine  +1px", (*) => NudgeNoEdict(1))
+    noEdictCalMenu.Add("▲  fine  -1px", (*) => NudgeNoEdict(-1))
+    noEdictCalMenu.Add()
+    noEdictCalMenu.Add("Type Y…", TypeNoEdictY)
+}
+NudgeNoEdict(delta) {
+    global EDICT_Y_NO_EDICT
+    EDICT_Y_NO_EDICT += delta
+    BuildNoEdictCalMenu()
+    Notify("No Edict  Y → " EDICT_Y_NO_EDICT)
+}
+TypeNoEdictY(*) {
+    global EDICT_Y_NO_EDICT
+    r := InputBox("Enter Y coordinate:", "No Edict", "w220 h100", EDICT_Y_NO_EDICT)
+    if r.Result = "OK" && IsInteger(r.Value) {
+        EDICT_Y_NO_EDICT := Integer(r.Value)
+        BuildNoEdictCalMenu()
+        Notify("No Edict  Y → " EDICT_Y_NO_EDICT)
+    }
+}
+
+BuildDivertCalMenu() {
+    global divertCalMenu, DIVERT_BTN_Y
+    divertCalMenu.Delete()
+    divertCalMenu.Add("Y = " DIVERT_BTN_Y, (*) => 0)
+    divertCalMenu.Disable("Y = " DIVERT_BTN_Y)
+    divertCalMenu.Add()
+    divertCalMenu.Add("▼  fine  +1px", (*) => NudgeDivert(1))
+    divertCalMenu.Add("▲  fine  -1px", (*) => NudgeDivert(-1))
+    divertCalMenu.Add()
+    divertCalMenu.Add("Type Y…", TypeDivertY)
+}
+NudgeDivert(delta) {
+    global DIVERT_BTN_Y
+    DIVERT_BTN_Y += delta
+    BuildDivertCalMenu()
+    Notify("Divert Trade  Y → " DIVERT_BTN_Y)
+}
+TypeDivertY(*) {
+    global DIVERT_BTN_Y
+    r := InputBox("Enter Y coordinate:", "Divert Trade Y", "w220 h100", DIVERT_BTN_Y)
+    if r.Result = "OK" && IsInteger(r.Value) {
+        DIVERT_BTN_Y := Integer(r.Value)
+        BuildDivertCalMenu()
+        Notify("Divert Trade  Y → " DIVERT_BTN_Y)
+    }
 }
 
 ; ============================================================
@@ -277,8 +424,40 @@ ImproveRelations(y_coord) {
 }
 
 ; ============================================================
-; State Edicts - set edict for all STATE_COUNT visible rows
+; State Edicts
+;
+; Single shot (default): hover anywhere on the target state row,
+; macro snaps to EDICT_BTN_X at that Y and fires. User skips
+; cooldown states by simply not pressing the hotkey on them.
+;
+; Chain (Ctrl+Shift+): loops all STATE_COUNT visible rows.
+; Use chain only when all visible states have no active edict cooldown —
+; on cooldown the dropdown never opens and the click at EDICT_OPT_X
+; may land on the map, potentially desynchronising the loop.
 ; ============================================================
+SetOneEdict(edict_y, needs_scroll := false) {
+    global WAIT, EDICT_BTN_X, EDICT_OPT_X
+    MouseGetPos , &curY
+    MouseMove EDICT_BTN_X, curY, 0
+    Sleep WAIT
+    Click
+    Sleep WAIT * 2
+
+    if needs_scroll {
+        MouseMove EDICT_OPT_X, 680, 0
+        Sleep WAIT
+        Send "{WheelDown}"
+        Sleep WAIT
+    }
+
+    MouseMove EDICT_OPT_X, edict_y, 0
+    Sleep WAIT
+    Click
+    Sleep WAIT
+    Send "{Enter}"
+    Sleep WAIT * 2
+}
+
 SetAllEdicts(edict_y, needs_scroll := false) {
     global WAIT, STATE_COUNT, EDICT_BTN_X, EDICT_BTN_Y_FIRST, EDICT_ROW_H, EDICT_OPT_X
 
@@ -361,10 +540,15 @@ Hotkey "^,", (*) => ImproveRelations(DIPLO_Y_OUTRAGED)   ; Ctrl+,  Outraged
 Hotkey "^m", (*) => ImproveRelations(DIPLO_Y_ALLIES)     ; Ctrl+M  Allies
 Hotkey "^n", (*) => ImproveRelations(DIPLO_Y_THREAT)     ; Ctrl+N  Threatening
 
-; --- State Edicts (panel open, state list scrolled to target rows) ---
-Hotkey "^e",  (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)          ; Ctrl+E        Encourage Dev
-Hotkey "^-",  (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)     ; Ctrl+-        No Edict
-Hotkey "^k",  (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)        ; Ctrl+K        Age ability (was Ctrl+A — conflicts with select-all)
+; --- State Edicts (panel open; hover target state row, then fire) ---
+; Single shot = bare Ctrl  (safe: user skips cooldown states manually)
+; Chain all   = Ctrl+Shift (use only when no states have active cooldowns)
+Hotkey "^e",   (*) => SetOneEdict(EDICT_Y_ENCOURAGE)          ; Ctrl+E        Encourage Dev — this row
+Hotkey "^+e",  (*) => SetAllEdicts(EDICT_Y_ENCOURAGE)         ; Ctrl+Shift+E  Encourage Dev — all rows
+Hotkey "^k",   (*) => SetOneEdict(EDICT_Y_AGE_ABILITY)        ; Ctrl+K        Age ability   — this row
+Hotkey "^+k",  (*) => SetAllEdicts(EDICT_Y_AGE_ABILITY)       ; Ctrl+Shift+K  Age ability   — all rows
+Hotkey "^-",   (*) => SetOneEdict(EDICT_Y_NO_EDICT, true)     ; Ctrl+-        No Edict      — this row
+Hotkey "^+-",  (*) => SetAllEdicts(EDICT_Y_NO_EDICT, true)    ; Ctrl+Shift+-  No Edict      — all rows
 
 ; --- Subjects (Subjects panel open, list scrolled to target rows) ---
 ; Right-hand cluster: ; is right of L, single shot is bare modifier
